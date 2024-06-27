@@ -8,7 +8,7 @@ import (
 
 	"github.com/beego/beego/logs"
 	"github.com/udistrital/usuario_rol_crud/models"
-	"github.com/udistrital/utils_oas/time_bogota"
+	"github.com/udistrital/usuario_rol_crud/services"
 
 	"github.com/astaxie/beego"
 )
@@ -36,11 +36,8 @@ func (c *UsuarioController) URLMapping() {
 // @router / [post]
 func (c *UsuarioController) Post() {
 	var v models.Usuario
-	v.Activo = true
-	v.FechaCreacion = time_bogota.TiempoBogotaFormato()
-	v.FechaModificacion = time_bogota.TiempoBogotaFormato()
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
-		if _, err := models.AddUsuario(&v); err == nil {
+		if _, err := services.AddUsuario(&v); err == nil {
 			c.Ctx.Output.SetStatus(201)
 			c.Data["json"] = map[string]interface{}{"Success": true, "Status": "201", "Message": "registration successful", "Data": v}
 		} else {
@@ -66,7 +63,7 @@ func (c *UsuarioController) Post() {
 func (c *UsuarioController) GetOne() {
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.Atoi(idStr)
-	v, err := models.GetUsuarioById(id)
+	v, err := services.GetUsuarioById(id)
 	if err != nil {
 		logs.Error(err)
 		c.Data["Message"] = "Error service GetOne: the reques contain an incorrect parameter or no record exists"
@@ -131,7 +128,7 @@ func (c *UsuarioController) GetAll() {
 		}
 	}
 
-	l, err := models.GetAllUsuario(query, fields, sortby, order, offset, limit)
+	l, err := services.GetAllUsuario(query, fields, sortby, order, offset, limit)
 	if err != nil {
 		logs.Error(err)
 		c.Data["Message"] = "Error service GetAll: the reques contain an incorrect parameter or no record exists"
@@ -153,22 +150,10 @@ func (c *UsuarioController) GetAll() {
 func (c *UsuarioController) Put() {
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.Atoi(idStr)
-
 	v := models.Usuario{Id: id}
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
-		//se recupera usuario existente para mantener fecha de creacion
-		usuario, err := models.GetUsuarioById(id)
-		if err != nil {
-			logs.Error(err)
-			c.Data["Message"] = "Error service Put: the reques contain an incorrect data type or an invalid parameter"
-			c.Abort("400")
-			return
-		}
 
-		v.Activo = true
-		v.FechaCreacion = time_bogota.TiempoCorreccionFormato(usuario.FechaCreacion)
-		v.FechaModificacion = time_bogota.TiempoBogotaFormato()
-		if err := models.UpdateUsuarioById(&v); err == nil {
+		if err := services.UpdateUsuarioById(&v); err == nil {
 			c.Data["json"] = map[string]interface{}{"Success": true, "Status": "200", "Message": "update successful", "Data": v}
 		} else {
 			logs.Error(err)
@@ -193,7 +178,7 @@ func (c *UsuarioController) Put() {
 func (c *UsuarioController) Delete() {
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.Atoi(idStr)
-	if err := models.DeleteUsuario(id); err == nil {
+	if err := services.DeleteUsuario(id); err == nil {
 		d := map[string]interface{}{"Id": id}
 		c.Data["json"] = map[string]interface{}{"Success": true, "Status": "200", "Message": "delete successful", "Data": d}
 	} else {

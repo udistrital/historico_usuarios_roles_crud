@@ -16,7 +16,7 @@ type PeriodoRolUsuario struct {
 	FechaCreacion     string   `orm:"column(fecha_creacion);type(timestamp without time zone)"`
 	FechaModificacion string   `orm:"column(fecha_modificacion);type(timestamp without time zone)"`
 	FechaInicio       string   `orm:"column(fecha_inicio);type(timestamp without time zone)"`
-	FechaFin          string   `orm:"column(fecha_fin);type(timestamp without time zone);null"`
+	FechaFin          *string  `orm:"column(fecha_fin);type(timestamp without time zone);null"`
 	UsuarioId         *Usuario `orm:"column(usuario_id);rel(fk)"`
 	RolId             *Rol     `orm:"column(rol_id);rel(fk)"`
 }

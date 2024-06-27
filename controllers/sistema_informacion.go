@@ -8,7 +8,7 @@ import (
 
 	"github.com/beego/beego/logs"
 	"github.com/udistrital/usuario_rol_crud/models"
-	"github.com/udistrital/utils_oas/time_bogota"
+	"github.com/udistrital/usuario_rol_crud/services"
 
 	"github.com/astaxie/beego"
 )
@@ -38,10 +38,7 @@ func (c *SistemaInformacionController) Post() {
 	var v models.SistemaInformacion
 
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
-		v.Activo = true
-		v.FechaCreacion = time_bogota.TiempoBogotaFormato()
-		v.FechaModificacion = time_bogota.TiempoBogotaFormato()
-		if _, err := models.AddSistemaInformacion(&v); err == nil {
+		if _, err := services.AddSistemaInformacion(&v); err == nil {
 			c.Ctx.Output.SetStatus(201)
 			c.Data["json"] = map[string]interface{}{"Success": true, "Status": "201", "Message": "registration successful", "Data": v}
 		} else {
@@ -67,7 +64,7 @@ func (c *SistemaInformacionController) Post() {
 func (c *SistemaInformacionController) GetOne() {
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.Atoi(idStr)
-	v, err := models.GetSistemaInformacionById(id)
+	v, err := services.GetSistemaInformacionById(id)
 	if err != nil {
 		logs.Error(err)
 		c.Data["Message"] = "Error service GetOne: the reques contain an incorrect parameter or no record exists"
@@ -132,7 +129,7 @@ func (c *SistemaInformacionController) GetAll() {
 		}
 	}
 
-	l, err := models.GetAllSistemaInformacion(query, fields, sortby, order, offset, limit)
+	l, err := services.GetAllSistemaInformacion(query, fields, sortby, order, offset, limit)
 	if err != nil {
 		logs.Error(err)
 		c.Data["Message"] = "Error service GetAll: the reques contain an incorrect parameter or no record exists"
@@ -158,18 +155,7 @@ func (c *SistemaInformacionController) Put() {
 
 	v := models.SistemaInformacion{Id: id}
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
-		//se recupera sistema existente para mantener fecha de creacion
-		sistema, err := models.GetUsuarioById(id)
-		if err != nil {
-			logs.Error(err)
-			c.Data["Message"] = "Error service Put: the reques contain an incorrect data type or an invalid parameter"
-			c.Abort("400")
-			return
-		}
-		v.Activo = true
-		v.FechaCreacion = time_bogota.TiempoCorreccionFormato(sistema.FechaCreacion)
-		v.FechaModificacion = time_bogota.TiempoBogotaFormato()
-		if err := models.UpdateSistemaInformacionById(&v); err == nil {
+		if err := services.UpdateSistemaInformacionById(&v); err == nil {
 			c.Data["json"] = map[string]interface{}{"Success": true, "Status": "200", "Message": "update successful", "Data": v}
 		} else {
 			logs.Error(err)
@@ -194,7 +180,7 @@ func (c *SistemaInformacionController) Put() {
 func (c *SistemaInformacionController) Delete() {
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.Atoi(idStr)
-	if err := models.DeleteSistemaInformacion(id); err == nil {
+	if err := services.DeleteSistemaInformacion(id); err == nil {
 		d := map[string]interface{}{"Id": id}
 		c.Data["json"] = map[string]interface{}{"Success": true, "Status": "200", "Message": "delete successful", "Data": d}
 	} else {
