@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/astaxie/beego/orm"
+	"github.com/beego/beego/logs"
 	"github.com/udistrital/utils_oas/time_bogota"
 )
 
@@ -162,4 +163,15 @@ func DeletePeriodoRolUsuario(id int) (err error) {
 		fmt.Println("No exite el registro", err)
 	}
 	return
+}
+func ValidarAsignarPerido(idUsuario int, idRol int) error {
+	var periodos []PeriodoRolUsuario
+	o := orm.NewOrm()
+	qs := o.QueryTable(new(PeriodoRolUsuario))
+	num, err := qs.Filter("activo", true).Filter("usuario_id", idUsuario).Filter("rol_id", idRol).All(&periodos)
+	if err == nil && num > 0 {
+		logs.Info(num)
+		return errors.New("el usuario ya tiene registrado el rol activo")
+	}
+	return nil
 }

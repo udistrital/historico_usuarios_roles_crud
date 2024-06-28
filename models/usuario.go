@@ -16,7 +16,7 @@ type Usuario struct {
 	Activo            bool   `orm:"column(activo)"`
 	FechaCreacion     string `orm:"column(fecha_creacion);type(timestamp without time zone)"`
 	FechaModificacion string `orm:"column(fecha_modificacion);type(timestamp without time zone)"`
-	Documento         string `orm:"column(documento);null;unique"`
+	Documento         string `orm:"column(documento);null"`
 }
 
 func (t *Usuario) TableName() string {

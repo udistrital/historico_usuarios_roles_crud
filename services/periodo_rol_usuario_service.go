@@ -17,15 +17,20 @@ func AddPeriodoRolUsuario(v *models.PeriodoRolUsuario) (id int64, err error) {
 	v.FechaModificacion = time_bogota.TiempoBogotaFormato()
 
 	if v.FechaFin != nil {
-		if err := validarPeriodoFechas(v.FechaInicio, v.FechaFin); err != nil {
+		if err := ValidarPeriodoFechas(v.FechaInicio, v.FechaFin); err != nil {
 			return 0, err
 		}
 	} else {
-		_, err := validarTipoFecha(v.FechaInicio)
+		_, err := ValidarTipoFecha(v.FechaInicio)
 		v.FechaFin = nil
 		if err != nil {
 			return 0, err
 		}
+	}
+	idUsuario := v.UsuarioId.Id
+	idRol := v.RolId.Id
+	if err := models.ValidarAsignarPerido(idUsuario, idRol); err != nil {
+		return 0, err
 	}
 	return models.AddPeriodoRolUsuario(v)
 }
@@ -47,11 +52,11 @@ func UpdatePeriodoRolUsuarioById(v *models.PeriodoRolUsuario) (err error) {
 	v.FechaModificacion = time_bogota.TiempoBogotaFormato()
 
 	if v.FechaFin != nil {
-		if err := validarPeriodoFechas(v.FechaInicio, v.FechaFin); err != nil {
+		if err := ValidarPeriodoFechas(v.FechaInicio, v.FechaFin); err != nil {
 			return err
 		}
 	} else {
-		_, err := validarTipoFecha(v.FechaInicio)
+		_, err := ValidarTipoFecha(v.FechaInicio)
 		v.FechaFin = nil
 		if err != nil {
 			return err
@@ -64,7 +69,7 @@ func DeletePeriodoRolUsuario(id int) (err error) {
 }
 
 // se valida el tipo de dato y estructura que ingresa para las fechas de inicio y fin
-func validarTipoFecha(fecha string) (date time.Time, err error) {
+func ValidarTipoFecha(fecha string) (date time.Time, err error) {
 	layout := "2006-01-02 15:04:05.999999"
 	fechaParseada, err := time.Parse(layout, fecha)
 	if err != nil {
@@ -74,16 +79,16 @@ func validarTipoFecha(fecha string) (date time.Time, err error) {
 }
 
 // se valida que la fecha de fin no vaya a ser menor que la de inicio
-func validarPeriodoFechas(inicio string, fin *string) error {
+func ValidarPeriodoFechas(inicio string, fin *string) error {
 	// Validar fecha de inicio
-	inicioTime, err := validarTipoFecha(inicio)
+	inicioTime, err := ValidarTipoFecha(inicio)
 	if err != nil {
 		return err
 	}
 
 	// Validar fecha de fin
 	fechaFin := *fin
-	finTime, err := validarTipoFecha(fechaFin)
+	finTime, err := ValidarTipoFecha(fechaFin)
 	if err != nil {
 		return err
 	}
