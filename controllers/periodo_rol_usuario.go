@@ -7,8 +7,9 @@ import (
 	"strings"
 
 	"github.com/beego/beego/logs"
+	"github.com/udistrital/usuario_rol_crud/helpers"
 	"github.com/udistrital/usuario_rol_crud/models"
-	"github.com/udistrital/utils_oas/time_bogota"
+	"github.com/udistrital/usuario_rol_crud/services"
 
 	"github.com/astaxie/beego"
 )
@@ -35,28 +36,23 @@ func (c *PeriodoRolUsuarioController) URLMapping() {
 // @Failure 403 body is empty
 // @router / [post]
 func (c *PeriodoRolUsuarioController) Post() {
-	var v models.PeriodoRolUsuario
+	defer helpers.ErrorController(c.Controller, "PeriodoRolUsuarioController")
 
-	v.Activo = true
-	v.FechaCreacion = time_bogota.TiempoBogotaFormato()
-	v.FechaModificacion = time_bogota.TiempoBogotaFormato()
-	v.FechaInicio = time_bogota.TiempoCorreccionFormato(v.FechaInicio)
-	if v.FechaFin != "" {
-		v.FechaFin = time_bogota.TiempoCorreccionFormato(v.FechaFin)
-	}
+	var v models.PeriodoRolUsuario
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
-		if _, err := models.AddPeriodoRolUsuario(&v); err == nil {
+
+		if _, err := services.AddPeriodoRolUsuario(&v); err == nil {
 			c.Ctx.Output.SetStatus(201)
-			c.Data["json"] = map[string]interface{}{"Success": true, "Status": "201", "Message": "registration successful", "Data": v}
+			c.Data["json"] = map[string]interface{}{"Success": true, "Status": 201, "Message": "Registro exitoso", "Data": v}
 
 		} else {
 			logs.Error(err)
-			c.Data["Message"] = "Error service Post: the reques contain an incorrect parameter or no record exists"
+			c.Data["Message"] = "Error servicio Post:  la petición contiene un parámetro incorrecto o no existe ningún registro"
 			c.Abort("400")
 		}
 	} else {
 		logs.Error(err)
-		c.Data["Message"] = "Error service Post: the reques contain an incorrect parameter or no record exists"
+		c.Data["Message"] = "Error servicio Post:  la petición contiene un parámetro incorrecto o no existe ningún registro"
 		c.Abort("400")
 	}
 	c.ServeJSON()
@@ -70,15 +66,17 @@ func (c *PeriodoRolUsuarioController) Post() {
 // @Failure 403 :id is empty
 // @router /:id [get]
 func (c *PeriodoRolUsuarioController) GetOne() {
+	defer helpers.ErrorController(c.Controller, "PeriodoRolUsuarioController")
+
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.Atoi(idStr)
-	v, err := models.GetPeriodoRolUsuarioById(id)
+	v, err := services.GetPeriodoRolUsuarioById(id)
 	if err != nil {
 		logs.Error(err)
-		c.Data["Message"] = "Error service GetOne: the reques contain an incorrect parameter or no record exists"
-		c.Abort("404")
+		c.Data["Message"] = "Error en el servicio GetOne: la solicitud contiene un parámetro incorrecto o no existe ningún registro."
+		c.Abort("400")
 	} else {
-		c.Data["json"] = map[string]interface{}{"Success": true, "Status": "200", "Message": "request successful", "Data": v}
+		c.Data["json"] = map[string]interface{}{"Success": true, "Status": 200, "Message": "Petición exitosa", "Data": v}
 	}
 	c.ServeJSON()
 }
@@ -96,6 +94,8 @@ func (c *PeriodoRolUsuarioController) GetOne() {
 // @Failure 403
 // @router / [get]
 func (c *PeriodoRolUsuarioController) GetAll() {
+	defer helpers.ErrorController(c.Controller, "PeriodoRolUsuarioController")
+
 	var fields []string
 	var sortby []string
 	var order []string
@@ -137,13 +137,14 @@ func (c *PeriodoRolUsuarioController) GetAll() {
 		}
 	}
 
-	l, err := models.GetAllPeriodoRolUsuario(query, fields, sortby, order, offset, limit)
+	//l, err := models.GetAllPeriodoRolUsuario(query, fields, sortby, order, offset, limit)
+	l, err := services.GetAllPeriodoRolUsuario(query, fields, sortby, order, offset, limit)
 	if err != nil {
 		logs.Error(err)
-		c.Data["Message"] = "Error service GetAll: the reques contain an incorrect parameter or no record exists"
+		c.Data["Message"] = "Error servicio GetAll: la solicitud contiene un parámetro incorrecto o no existe ningún registro."
 		c.Abort("404")
 	} else {
-		c.Data["json"] = map[string]interface{}{"Success": true, "Status": "200", "Message": "request successful", "Data": l}
+		c.Data["json"] = map[string]interface{}{"Success": true, "Status": 200, "Message": "Petición exitosa", "Data": l}
 	}
 	c.ServeJSON()
 }
@@ -157,33 +158,23 @@ func (c *PeriodoRolUsuarioController) GetAll() {
 // @Failure 403 :id is not int
 // @router /:id [put]
 func (c *PeriodoRolUsuarioController) Put() {
+	defer helpers.ErrorController(c.Controller, "PeriodoRolUsuarioController")
+
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.Atoi(idStr)
 	v := models.PeriodoRolUsuario{Id: id}
 
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
-		//se recupera periodo existente para mantener fecha de creacion
-		periodo, err := models.GetUsuarioById(id)
-		if err != nil {
-			logs.Error(err)
-			c.Data["Message"] = "Error service Put: the reques contain an incorrect data type or an invalid parameter"
-			c.Abort("400")
-			return
-		}
-		v.Activo = true
-		v.FechaCreacion = time_bogota.TiempoCorreccionFormato(periodo.FechaCreacion)
-		v.FechaModificacion = time_bogota.TiempoBogotaFormato()
-
-		if err := models.UpdatePeriodoRolUsuarioById(&v); err == nil {
-			c.Data["json"] = map[string]interface{}{"Success": true, "Status": "200", "Message": "update successful", "Data": v}
+		if err := services.UpdatePeriodoRolUsuarioById(&v); err == nil {
+			c.Data["json"] = map[string]interface{}{"Success": true, "Status": 200, "Message": "Modificacion exitosa", "Data": v}
 		} else {
 			logs.Error(err)
-			c.Data["Message"] = "Error service Put: the reques contain an incorrect data type or an invalid parameter"
+			c.Data["Message"] = "Error servicio Put: la solicitud contiene un tipo de datos incorrecto o un parámetro no válido"
 			c.Abort("400")
 		}
 	} else {
 		logs.Error(err)
-		c.Data["Message"] = "Error service Put: the reques contain an incorrect data type or an invalid parameter"
+		c.Data["Message"] = "Error servicio Put: la solicitud contiene un tipo de datos incorrecto o un parámetro no válido"
 		c.Abort("400")
 	}
 	c.ServeJSON()
@@ -197,14 +188,16 @@ func (c *PeriodoRolUsuarioController) Put() {
 // @Failure 403 id is empty
 // @router /:id [delete]
 func (c *PeriodoRolUsuarioController) Delete() {
+	defer helpers.ErrorController(c.Controller, "PeriodoRolUsuarioController")
+
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.Atoi(idStr)
-	if err := models.DeletePeriodoRolUsuario(id); err == nil {
+	if err := services.DeletePeriodoRolUsuario(id); err == nil {
 		d := map[string]interface{}{"Id": id}
-		c.Data["json"] = map[string]interface{}{"Success": true, "Status": "200", "Message": "delete successful", "Data": d}
+		c.Data["json"] = map[string]interface{}{"Success": true, "Status": 200, "Message": "Eliminacion exitosa", "Data": d}
 	} else {
 		logs.Error(err)
-		c.Data["Message"] = "Error service Delete: the reques contain an incorrect data type or an invalid parameter"
+		c.Data["Message"] = "Error servicio Delete: la solicitud contiene un tipo de datos incorrecto o un parámetro no válido"
 		c.Abort("404")
 	}
 	c.ServeJSON()

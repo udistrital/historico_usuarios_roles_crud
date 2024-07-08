@@ -31,6 +31,11 @@ func init() {
 // last inserted Id on success.
 func AddUsuario(m *Usuario) (id int64, err error) {
 	o := orm.NewOrm()
+	//se valida si el numero de documento ya existe antes de registrarlo
+	exist := Usuario{Documento: m.Documento}
+	if m.Documento != "" && o.Read(&exist, "Documento") == nil {
+		return 0, errors.New("documento already exists")
+	}
 	id, err = o.Insert(m)
 	return
 }
@@ -161,4 +166,10 @@ func DeleteUsuario(id int) (err error) {
 		fmt.Println("No exite el registro", err)
 	}
 	return
+}
+
+// Check if a Documento already exists
+func DocumentoExistente(documento string) bool {
+	o := orm.NewOrm()
+	return o.QueryTable("usuario").Filter("documento", documento).Exist()
 }

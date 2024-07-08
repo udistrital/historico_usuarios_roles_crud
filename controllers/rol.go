@@ -7,8 +7,9 @@ import (
 	"strings"
 
 	"github.com/beego/beego/logs"
+	"github.com/udistrital/usuario_rol_crud/helpers"
 	"github.com/udistrital/usuario_rol_crud/models"
-	"github.com/udistrital/utils_oas/time_bogota"
+	"github.com/udistrital/usuario_rol_crud/services"
 
 	"github.com/astaxie/beego"
 )
@@ -35,22 +36,21 @@ func (c *RolController) URLMapping() {
 // @Failure 403 body is empty
 // @router / [post]
 func (c *RolController) Post() {
+	defer helpers.ErrorController(c.Controller, "RolController")
+
 	var v models.Rol
-	v.Activo = true
-	v.FechaCreacion = time_bogota.TiempoBogotaFormato()
-	v.FechaModificacion = time_bogota.TiempoBogotaFormato()
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
-		if _, err := models.AddRol(&v); err == nil {
+		if _, err := services.AddRol(&v); err == nil {
 			c.Ctx.Output.SetStatus(201)
-			c.Data["json"] = map[string]interface{}{"Success": true, "Status": "201", "Message": "registration successful", "Data": v}
+			c.Data["json"] = map[string]interface{}{"Success": true, "Status": 201, "Message": "Registro exitoso", "Data": v}
 		} else {
 			logs.Error(err)
-			c.Data["Message"] = "Error service Post: the reques contain an incorrect parameter or no record exists"
+			c.Data["Message"] = "Error servicio Post:  la petición contiene un parámetro incorrecto o no existe ningún registro"
 			c.Abort("400")
 		}
 	} else {
 		logs.Error(err)
-		c.Data["Message"] = "Error service Post: the reques contain an incorrect parameter or no record exists"
+		c.Data["Message"] = "Error servicio Post:  la petición contiene un parámetro incorrecto o no existe ningún registro"
 		c.Abort("400")
 	}
 	c.ServeJSON()
@@ -64,15 +64,17 @@ func (c *RolController) Post() {
 // @Failure 403 :id is empty
 // @router /:id [get]
 func (c *RolController) GetOne() {
+	defer helpers.ErrorController(c.Controller, "RolController")
+
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.Atoi(idStr)
-	v, err := models.GetRolById(id)
+	v, err := services.GetRolById(id)
 	if err != nil {
 		logs.Error(err)
-		c.Data["Message"] = "Error service GetOne: the reques contain an incorrect parameter or no record exists"
+		c.Data["Message"] = "Error en el servicio GetOne: la solicitud contiene un parámetro incorrecto o no existe ningún registro."
 		c.Abort("404")
 	} else {
-		c.Data["json"] = map[string]interface{}{"Success": true, "Status": "200", "Message": "request successful", "Data": v}
+		c.Data["json"] = map[string]interface{}{"Success": true, "Status": 200, "Message": "Petición exitosa", "Data": v}
 	}
 	c.ServeJSON()
 }
@@ -90,6 +92,8 @@ func (c *RolController) GetOne() {
 // @Failure 403
 // @router / [get]
 func (c *RolController) GetAll() {
+	defer helpers.ErrorController(c.Controller, "RolController")
+
 	var fields []string
 	var sortby []string
 	var order []string
@@ -131,11 +135,13 @@ func (c *RolController) GetAll() {
 		}
 	}
 
-	l, err := models.GetAllRol(query, fields, sortby, order, offset, limit)
+	l, err := services.GetAllRol(query, fields, sortby, order, offset, limit)
 	if err != nil {
-		c.Data["json"] = err.Error()
+		logs.Error(err)
+		c.Data["Message"] = "Error servicio GetAll: la solicitud contiene un parámetro incorrecto o no existe ningún registro."
+		c.Abort("404")
 	} else {
-		c.Data["json"] = l
+		c.Data["json"] = map[string]interface{}{"Success": true, "Status": 200, "Message": "Petición exitosa", "Data": l}
 	}
 	c.ServeJSON()
 }
@@ -149,31 +155,22 @@ func (c *RolController) GetAll() {
 // @Failure 403 :id is not int
 // @router /:id [put]
 func (c *RolController) Put() {
+	defer helpers.ErrorController(c.Controller, "RolController")
+
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.Atoi(idStr)
 	v := models.Rol{Id: id}
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
-		//se recupera rol existente para mantener fecha de creacion
-		rol, err := models.GetUsuarioById(id)
-		if err != nil {
-			logs.Error(err)
-			c.Data["Message"] = "Error service Put: the reques contain an incorrect data type or an invalid parameter"
-			c.Abort("400")
-			return
-		}
-		v.Activo = true
-		v.FechaCreacion = time_bogota.TiempoCorreccionFormato(rol.FechaCreacion)
-		v.FechaModificacion = time_bogota.TiempoBogotaFormato()
 		if err := models.UpdateRolById(&v); err == nil {
-			c.Data["json"] = map[string]interface{}{"Success": true, "Status": "200", "Message": "update successful", "Data": v}
+			c.Data["json"] = map[string]interface{}{"Success": true, "Status": 200, "Message": "Modificacion exitosa", "Data": v}
 		} else {
 			logs.Error(err)
-			c.Data["Message"] = "Error service Put: the reques contain an incorrect data type or an invalid parameter"
+			c.Data["Message"] = "Error servicio Put: la solicitud contiene un tipo de datos incorrecto o un parámetro no válido"
 			c.Abort("400")
 		}
 	} else {
 		logs.Error(err)
-		c.Data["Message"] = "Error service Put: the reques contain an incorrect data type or an invalid parameter"
+		c.Data["Message"] = "Error servicio Put: la solicitud contiene un tipo de datos incorrecto o un parámetro no válido"
 		c.Abort("400")
 	}
 	c.ServeJSON()
@@ -187,14 +184,16 @@ func (c *RolController) Put() {
 // @Failure 403 id is empty
 // @router /:id [delete]
 func (c *RolController) Delete() {
+	defer helpers.ErrorController(c.Controller, "RolController")
+
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.Atoi(idStr)
-	if err := models.DeleteRol(id); err == nil {
+	if err := services.DeleteRol(id); err == nil {
 		d := map[string]interface{}{"Id": id}
-		c.Data["json"] = map[string]interface{}{"Success": true, "Status": "200", "Message": "delete successful", "Data": d}
+		c.Data["json"] = map[string]interface{}{"Success": true, "Status": 200, "Message": "Eliminacion exitosa", "Data": d}
 	} else {
 		logs.Error(err)
-		c.Data["Message"] = "Error service Delete: the reques contain an incorrect data type or an invalid parameter"
+		c.Data["Message"] = "Error servicio Delete: la solicitud contiene un tipo de datos incorrecto o un parámetro no válido"
 		c.Abort("400")
 	}
 	c.ServeJSON()
