@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"github.com/astaxie/beego"
-	"github.com/beego/beego/logs"
+	"github.com/astaxie/beego/logs"
 )
 
 func ErrorController(c beego.Controller, controller string) {

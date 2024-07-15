@@ -1,9 +1,9 @@
 -- SCHEMA: usuario-rol
 
--- DROP SCHEMA IF EXISTS "usuario-rol" ;
+DROP SCHEMA IF EXISTS "usuario_rol_db" ;
 
-CREATE SCHEMA IF NOT EXISTS "usuario_rol"
-    AUTHORIZATION postgres;
+CREATE SCHEMA IF NOT EXISTS "usuario_rol_db"
+   -- AUTHORIZATION postgres;
 	
 	
 	CREATE TABLE IF NOT EXISTS usuario_rol.usuario(
