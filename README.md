@@ -19,7 +19,7 @@ usuario_rol_v1_PGdb=[nombre de la base de datos]
 usuario_rol_v1_PGschema=[esquema donde se ubican las tablas]
 
 ### Ejecución del Proyecto
-shel
+```shel
 
 # 1. Obtener el repositorio con Go
 go get github.com/udistrital/inscripcion_crud
@@ -34,7 +34,7 @@ git pull origin develop && git checkout develop
 
 # 5. ejecutar el proyecto
 bee run -downdoc=true -gendoc=true 
-
+```
 ## Estado CI
 
 | Develop | Relese 0.0.1 | Master |
@@ -43,7 +43,7 @@ bee run -downdoc=true -gendoc=true
 
 ## Modelo de Datos
 
-[Modelo de Datos API CRUD historico_usuarios_roles_crud](https://udistritaleduco-my.sharepoint.com/:i:/g/personal/computo_udistrital_edu_co/EVcG7HT2O4ZJg-XsKu4XsaYBqSijATtERNxWIXvxRhfJZw?e=f2BdIN)
+[Modelo de Datos API CRUD historico_usuarios_roles_crud](https://udistritaleduco-my.sharepoint.com/:i:/g/personal/computo_udistrital_edu_co/ETC3Qy30I-xMqof1NbjVrikBXokuoCPu-HuAf4Spz34l3w?e=9bmgpi)
 
 
 ## Licencia
