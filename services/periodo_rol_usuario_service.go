@@ -70,7 +70,7 @@ func DeletePeriodoRolUsuario(id int) (err error) {
 
 // se valida el tipo de dato y estructura que ingresa para las fechas de inicio y fin
 func ValidarTipoFecha(fecha string) (date time.Time, err error) {
-	layout := "2006-01-02 15:04:05.999999"
+	layout := "2006-01-02"
 	fechaParseada, err := time.Parse(layout, fecha)
 	if err != nil {
 		return fechaParseada, errors.New("formato de la fecha " + fecha + " es incorrecto")
@@ -99,3 +99,27 @@ func ValidarPeriodoFechas(inicio string, fin *string) error {
 	}
 	return nil
 }
+
+/*
+func formatPeriodoRolUsuario(p *models.PeriodoRolUsuario) (*models.PeriodoRolUsuario, error) {
+	const layoutDate = "2006-01-02"
+
+	if p.FechaInicio != "" {
+		t, err := time.Parse(layoutDate, p.FechaInicio)
+		if err != nil {
+			return p, err
+		}
+		p.FechaInicio = t.Format(layoutDate)
+	}
+
+	if p.FechaFin != nil && *p.FechaFin != "" {
+		t, err := time.Parse(layoutDate, *p.FechaFin)
+		if err != nil {
+			return p, err
+		}
+		formatted := t.Format(layoutDate)
+		p.FechaFin = &formatted
+	}
+	return p, nil
+}
+*/

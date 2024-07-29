@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+	"time"
 
+	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
-	"github.com/beego/beego/logs"
 	"github.com/udistrital/utils_oas/time_bogota"
 )
 
@@ -16,8 +17,9 @@ type PeriodoRolUsuario struct {
 	Activo            bool     `orm:"column(activo)"`
 	FechaCreacion     string   `orm:"column(fecha_creacion);type(timestamp without time zone)"`
 	FechaModificacion string   `orm:"column(fecha_modificacion);type(timestamp without time zone)"`
-	FechaInicio       string   `orm:"column(fecha_inicio);type(timestamp without time zone)"`
-	FechaFin          *string  `orm:"column(fecha_fin);type(timestamp without time zone);null"`
+	FechaInicio       string   `orm:"column(fecha_inicio);type(date)"`
+	FechaFin          *string  `orm:"column(fecha_fin);type(date);null"`
+	Finalizado        bool     `orm:"column(finalizado)"`
 	UsuarioId         *Usuario `orm:"column(usuario_id);rel(fk)"`
 	RolId             *Rol     `orm:"column(rol_id);rel(fk)"`
 }
@@ -44,7 +46,11 @@ func GetPeriodoRolUsuarioById(id int) (v *PeriodoRolUsuario, err error) {
 	o := orm.NewOrm()
 	v = &PeriodoRolUsuario{Id: id}
 	if err = o.Read(v); err == nil {
-		return v, nil
+		formateado, err := formatoFechas(*v)
+		if err != nil {
+			return nil, err
+		}
+		return &formateado, nil
 	}
 	return nil, err
 }
@@ -109,13 +115,21 @@ func GetAllPeriodoRolUsuario(query map[string]string, fields []string, sortby []
 	if _, err = qs.Limit(limit, offset).All(&l, fields...); err == nil {
 		if len(fields) == 0 {
 			for _, v := range l {
-				ml = append(ml, v)
+				formateado, err := formatoFechas(v)
+				if err != nil {
+					return nil, err
+				}
+				ml = append(ml, formateado)
 			}
 		} else {
 			// trim unused fields
 			for _, v := range l {
+				formateado, err := formatoFechas(v)
+				if err != nil {
+					return nil, err
+				}
 				m := make(map[string]interface{})
-				val := reflect.ValueOf(v)
+				val := reflect.ValueOf(formateado)
 				for _, fname := range fields {
 					m[fname] = val.FieldByName(fname).Interface()
 				}
@@ -174,4 +188,25 @@ func ValidarAsignarPerido(idUsuario int, idRol int) error {
 		return errors.New("el usuario ya tiene registrado el rol activo")
 	}
 	return nil
+}
+func formatoFechas(p PeriodoRolUsuario) (PeriodoRolUsuario, error) {
+	const layoutDateTime = "2006-01-02 15:04:05 +0000 +0000"
+
+	if p.FechaInicio != "" {
+		t, err := time.Parse(layoutDateTime, p.FechaInicio)
+		if err != nil {
+			return p, err
+		}
+		p.FechaInicio = t.Format("2006-01-02") // Solo la fecha
+	}
+
+	if p.FechaFin != nil && *p.FechaFin != "" {
+		t, err := time.Parse(layoutDateTime, *p.FechaFin)
+		if err != nil {
+			return p, err
+		}
+		formatted := t.Format("2006-01-02") // Solo la fecha
+		p.FechaFin = &formatted
+	}
+	return p, nil
 }

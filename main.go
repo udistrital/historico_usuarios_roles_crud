@@ -7,6 +7,8 @@ import (
 	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego/plugins/cors"
 	_ "github.com/lib/pq"
+
+	//_ "github.com/udistrital/usuario_rol_crud/migrations" // Asegúrate de importar tus migraciones
 	apistatus "github.com/udistrital/utils_oas/apiStatusLib"
 	"github.com/udistrital/utils_oas/xray"
 )

@@ -4,9 +4,9 @@ go 1.18
 
 require (
 	github.com/astaxie/beego v1.12.3
-	github.com/beego/beego v1.12.12
 	github.com/lib/pq v1.10.9
-	github.com/udistrital/utils_oas v0.0.0-20240430155342-465f75e9f273
+	github.com/stretchr/testify v1.9.0
+	github.com/udistrital/utils_oas v0.0.0-20240711190955-138b3a53e7b1
 )
 
 require (
@@ -28,7 +28,6 @@ require (
 	github.com/prometheus/common v0.21.0 // indirect
 	github.com/prometheus/procfs v0.6.0 // indirect
 	github.com/shiena/ansicolor v0.0.0-20200904210342-c7312218db18 // indirect
-	github.com/stretchr/testify v1.9.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.34.0 // indirect
 	golang.org/x/crypto v0.19.0 // indirect

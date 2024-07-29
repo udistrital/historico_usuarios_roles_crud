@@ -482,6 +482,8 @@ definitions:
         type: string
       FechaModificacion:
         type: string
+      Finalizado:
+        type: boolean
       Id:
         type: integer
         format: int64

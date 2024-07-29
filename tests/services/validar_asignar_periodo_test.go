@@ -9,7 +9,8 @@ import (
 
 func TestValidarTipoFechaOk(t *testing.T) {
 	a := assert.New(t)
-	_, err := services.ValidarTipoFecha("2024-12-23 20:31:25.585123")
+	//_, err := services.ValidarTipoFecha("2024-12-23 20:31:25.585123")
+	_, err := services.ValidarTipoFecha("2024-12-23")
 	a.Equal(nil, err, "tipo de fecha correcta")
 }
 
@@ -31,6 +32,6 @@ func TestValidarTipoFechaVacio(t *testing.T) {
 	a := assert.New(t)
 	_, err := services.ValidarTipoFecha("")
 	a.Error(err, "se esperaba error")
-	a.EqualError(err, "formato de la  es incorrecto", "parametro de fecha vacio controlado")
+	a.EqualError(err, "formato de la fecha  es incorrecto", "parametro de fecha vacio controlado")
 
 }

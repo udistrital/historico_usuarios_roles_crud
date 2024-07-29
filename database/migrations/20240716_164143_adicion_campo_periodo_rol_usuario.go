@@ -9,22 +9,22 @@ import (
 )
 
 // DO NOT MODIFY
-type CreacionTablas_20240626_001109 struct {
+type AdicionCampoPeriodoRolUsuario_20240716_164143 struct {
 	migration.Migration
 }
 
 // DO NOT MODIFY
 func init() {
-	m := &CreacionTablas_20240626_001109{}
-	m.Created = "20240626_001109"
+	m := &AdicionCampoPeriodoRolUsuario_20240716_164143{}
+	m.Created = "20240716_164143"
 
-	migration.Register("CreacionTablas_20240626_001109", m)
+	migration.Register("AdicionCampoPeriodoRolUsuario_20240716_164143", m)
 }
 
 // Run the migrations
-func (m *CreacionTablas_20240626_001109) Up() {
+func (m *AdicionCampoPeriodoRolUsuario_20240716_164143) Up() {
 	// use m.SQL("CREATE TABLE ...") to make schema update
-	file, err := os.ReadFile("../scripts/20240626_001109_creacion_tablas.up.sql")
+	file, err := os.ReadFile("../scripts/20240716_164143_adicion_campo_periodo_rol_usuario.up.sql")
 
 	if err != nil {
 		// handle error
@@ -42,9 +42,9 @@ func (m *CreacionTablas_20240626_001109) Up() {
 }
 
 // Reverse the migrations
-func (m *CreacionTablas_20240626_001109) Down() {
-	// use m.SQL("DROP TABLE ...") to reverse schema update
-	file, err := os.ReadFile("../scripts/20240626_001109_creacion_tablas.down.sql")
+func (m *AdicionCampoPeriodoRolUsuario_20240716_164143) Down() {
+	// use m.SQL("CREATE TABLE ...") to make schema update
+	file, err := os.ReadFile("../scripts/20240716_164143_adicion_campo_periodo_rol_usuario.up.sql")
 
 	if err != nil {
 		// handle error
@@ -58,4 +58,5 @@ func (m *CreacionTablas_20240626_001109) Down() {
 		m.SQL(request)
 		// do whatever you need with result and error
 	}
+
 }

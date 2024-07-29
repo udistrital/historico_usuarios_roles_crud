@@ -9,22 +9,22 @@ import (
 )
 
 // DO NOT MODIFY
-type CreacionTablas_20240626_001109 struct {
+type CambioTipodatoFechasInicioFin_20240726_155105 struct {
 	migration.Migration
 }
 
 // DO NOT MODIFY
 func init() {
-	m := &CreacionTablas_20240626_001109{}
-	m.Created = "20240626_001109"
+	m := &CambioTipodatoFechasInicioFin_20240726_155105{}
+	m.Created = "20240726_155105"
 
-	migration.Register("CreacionTablas_20240626_001109", m)
+	migration.Register("CambioTipodatoFechasInicioFin_20240726_155105", m)
 }
 
 // Run the migrations
-func (m *CreacionTablas_20240626_001109) Up() {
+func (m *CambioTipodatoFechasInicioFin_20240726_155105) Up() {
 	// use m.SQL("CREATE TABLE ...") to make schema update
-	file, err := os.ReadFile("../scripts/20240626_001109_creacion_tablas.up.sql")
+	file, err := os.ReadFile("../scripts/20240726_155105_cambio_tipodato_fechas_inicio_fin.up.sql")
 
 	if err != nil {
 		// handle error
@@ -38,13 +38,12 @@ func (m *CreacionTablas_20240626_001109) Up() {
 		m.SQL(request)
 		// do whatever you need with result and error
 	}
-
 }
 
 // Reverse the migrations
-func (m *CreacionTablas_20240626_001109) Down() {
+func (m *CambioTipodatoFechasInicioFin_20240726_155105) Down() {
 	// use m.SQL("DROP TABLE ...") to reverse schema update
-	file, err := os.ReadFile("../scripts/20240626_001109_creacion_tablas.down.sql")
+	file, err := os.ReadFile("../scripts/20240726_155105_cambio_tipodato_fechas_inicio_fin.down.sql")
 
 	if err != nil {
 		// handle error

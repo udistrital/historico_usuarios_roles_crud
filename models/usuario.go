@@ -6,8 +6,8 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
-	"github.com/beego/beego/logs"
 	"github.com/udistrital/utils_oas/time_bogota"
 )
 

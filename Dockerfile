@@ -1,31 +1,22 @@
-# Etapa 1: Compilación
-FROM golang:1.22 as builder
- 
+# Utilizar una imagen base de Go
+FROM golang:1.18-alpine
+
 # Establecer el directorio de trabajo dentro del contenedor
 WORKDIR /app
- 
-# Copiar los archivos del proyecto al directorio de trabajo
-COPY . .
- 
-# Descargar las dependencias del proyecto
+
+# Copiar los archivos de go.mod y go.sum y descargar las dependencias
+COPY go.mod go.sum ./
 RUN go mod download
- 
-# Compilar la aplicación Go
+
+# Copiar el resto del código fuente de la aplicación
+COPY . .
+
+# Compilar la aplicación
 RUN go build -o main .
- 
-# Etapa 2: Construcción de la imagen final
-FROM python:3
- 
-RUN pip install awscli
- 
-WORKDIR /
- 
-# Copiar el binario compilado desde la etapa de compilación
-COPY --from=builder /app/main .
- 
-# Exponer el puerto en el que corre la aplicación (cambiar al puerto adecuado)
+
+# Exponer el puerto en el que la aplicación escuchará
 EXPOSE 8080
- 
-# Comando para ejecutar la aplicación
+
+# Ejecutar la aplicación
 CMD ["./main"]
- 
+
