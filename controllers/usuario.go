@@ -81,6 +81,28 @@ func (c *UsuarioController) GetOne() {
 	c.ServeJSON()
 }
 
+// GetPeriodosByDocumento ...
+// @Title Get One Periodo por Documento
+// @Description get Usuario by documento and periodos
+// @Param	documento		path 	string	true		"The key for staticblock"
+// @Success 200 {object} models.Usuario
+// @Failure 403 :id is empty
+// @router /:documento/periodos [get]
+func (c *UsuarioController) GetPeriodosByDocumento() {
+	documento := c.Ctx.Input.Param(":documento")
+
+	periodosUsuario, err := services.GetPeriodosPorDocumento(documento)
+
+	if err != nil {
+		logs.Error(err)
+		c.Data["Message"] = "Error en la consulta de los periodos."
+		c.Abort("404")
+	} else {
+		c.Data["json"] = map[string]interface{}{"Success": true, "Status": 200, "Message": "Petición exitosa", "Data": periodosUsuario}
+	}
+	c.ServeJSON()
+}
+
 // GetAll ...
 // @Title Get All
 // @Description get Usuario

@@ -39,3 +39,14 @@ func UpdateUsuarioById(v *models.Usuario) (err error) {
 func DeleteUsuario(id int) (err error) {
 	return models.DeleteUsuario(id)
 }
+func GetPeriodosPorDocumento(documento string) ([]models.PeriodoRolUsuario, error) {
+	usuario, err := models.GetUsuarioByDocumento(documento)
+	if err != nil {
+		return nil, errors.New("el documento no existe")
+	}
+	periodos, err := models.GetPeriodosByUsuarioId(usuario.Id)
+	if err != nil {
+		return nil, errors.New("no existen periodos por usuario")
+	}
+	return periodos, err
+}

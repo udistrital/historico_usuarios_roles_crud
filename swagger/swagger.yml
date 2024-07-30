@@ -408,6 +408,25 @@ paths:
           description: '{int} models.Usuario'
         "403":
           description: body is empty
+  /usuarios/{documento}/periodos:
+    get:
+      tags:
+      - usuarios
+      description: get Usuario by documento and periodos
+      operationId: UsuarioController.Get One Periodo por Documento
+      parameters:
+      - in: path
+        name: documento
+        description: The key for staticblock
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/models.Usuario'
+        "403":
+          description: :id is empty
   /usuarios/{id}:
     get:
       tags:

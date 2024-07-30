@@ -210,3 +210,14 @@ func formatoFechas(p PeriodoRolUsuario) (PeriodoRolUsuario, error) {
 	}
 	return p, nil
 }
+
+// GetPeriodosByUsuarioId obtiene los periodos de un usuario dado su ID
+func GetPeriodosByUsuarioId(usuarioId int) ([]PeriodoRolUsuario, error) {
+	o := orm.NewOrm()
+	var periodos []PeriodoRolUsuario
+	_, err := o.QueryTable("periodo_rol_usuario").Filter("usuario_id", usuarioId).All(&periodos)
+	if err != nil {
+		return nil, err
+	}
+	return periodos, nil
+}
