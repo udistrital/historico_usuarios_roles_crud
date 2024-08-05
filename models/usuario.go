@@ -173,3 +173,12 @@ func DocumentoExistente(documento string) bool {
 	o := orm.NewOrm()
 	return o.QueryTable("usuario").Filter("documento", documento).Exist()
 }
+func GetUsuarioByDocumento(documento string) (*Usuario, error) {
+	o := orm.NewOrm()
+	var usuario Usuario
+	err := o.QueryTable("usuario").Filter("documento", documento).One(&usuario)
+	if err != nil {
+		return nil, err
+	}
+	return &usuario, nil
+}

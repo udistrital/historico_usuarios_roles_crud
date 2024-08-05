@@ -32,6 +32,7 @@ func init() {
 			beego.NSInclude(
 				&controllers.UsuarioController{},
 			),
+			beego.NSRouter("/:documento/periodos", &controllers.UsuarioController{}, "get:GetPeriodosByDocumento"),
 		),
 
 		beego.NSNamespace("/periodos-rol-usuarios",
