@@ -99,27 +99,7 @@ func ValidarPeriodoFechas(inicio string, fin *string) error {
 	}
 	return nil
 }
-
-/*
-func formatPeriodoRolUsuario(p *models.PeriodoRolUsuario) (*models.PeriodoRolUsuario, error) {
-	const layoutDate = "2006-01-02"
-
-	if p.FechaInicio != "" {
-		t, err := time.Parse(layoutDate, p.FechaInicio)
-		if err != nil {
-			return p, err
-		}
-		p.FechaInicio = t.Format(layoutDate)
-	}
-
-	if p.FechaFin != nil && *p.FechaFin != "" {
-		t, err := time.Parse(layoutDate, *p.FechaFin)
-		if err != nil {
-			return p, err
-		}
-		formatted := t.Format(layoutDate)
-		p.FechaFin = &formatted
-	}
-	return p, nil
+func PeriodosPorSistema(usuarioId *string, sistemaId string, query map[string]string, fields []string, sortby []string, order []string,
+	offset int64, limit int64) (ml []interface{}, err error) {
+	return models.GetPeriodosBySistemaId(usuarioId, sistemaId, query, fields, sortby, order, offset, limit)
 }
-*/

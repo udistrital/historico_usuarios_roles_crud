@@ -42,17 +42,43 @@ func AddPeriodoRolUsuario(m *PeriodoRolUsuario) (id int64, err error) {
 
 // GetPeriodoRolUsuarioById retrieves PeriodoRolUsuario by Id. Returns error if
 // Id doesn't exist
-func GetPeriodoRolUsuarioById(id int) (v *PeriodoRolUsuario, err error) {
+func GetPeriodoRolUsuarioById(id int) (*PeriodoRolUsuario, error) {
 	o := orm.NewOrm()
-	v = &PeriodoRolUsuario{Id: id}
-	if err = o.Read(v); err == nil {
-		formateado, err := formatoFechas(*v)
-		if err != nil {
+	v := &PeriodoRolUsuario{Id: id}
+
+	// Leer la entidad principal
+	if err := o.Read(v); err != nil {
+		return nil, err
+	}
+
+	// Cargar Usuario relacionado
+	if v.UsuarioId != nil {
+		if err := o.Read(v.UsuarioId); err != nil {
 			return nil, err
 		}
-		return &formateado, nil
 	}
-	return nil, err
+
+	// Cargar Rol relacionado
+	if v.RolId != nil {
+		if err := o.Read(v.RolId); err != nil {
+			return nil, err
+		}
+	}
+
+	// cargar el SistemaInformacion relacionado con Rol
+	if v.RolId != nil && v.RolId.SistemaInformacionId != nil {
+		if err := o.Read(v.RolId.SistemaInformacionId); err != nil {
+			return nil, err
+		}
+	}
+
+	// Formatear fechas
+	formateado, err := formatoFechas(*v)
+	if err != nil {
+		return nil, err
+	}
+
+	return &formateado, nil
 }
 
 // GetAllPeriodoRolUsuario retrieves all PeriodoRolUsuario matches certain condition. Returns empty list if
@@ -296,4 +322,74 @@ func GetPeriodosByUsuarioId(usuarioId int, query map[string]string, fields []str
 		return ml, nil
 	}
 	return nil, err
+}
+func GetPeriodosBySistemaId(usuarioId *string, sistemaId string, query map[string]string, fields []string, sortby []string, order []string,
+	offset int64, limit int64) (ml []interface{}, err error) {
+	o := orm.NewOrm()
+	var results []PeriodoRolUsuario
+
+	// Base SQL Query con filtros por sistema de información y usuario
+	sql := `SELECT p.* FROM usuario_rol.periodo_rol_usuario p 
+		INNER JOIN usuario_rol.rol r ON p.rol_id = r.id 
+		INNER JOIN usuario_rol.sistema_informacion s ON r.sistema_informacion_id = s.id 
+		INNER JOIN usuario_rol.usuario u ON p.usuario_id = u.id
+		WHERE `
+
+	sql += fmt.Sprintf("s.id = '%s'", sistemaId)
+
+	// Si se pasa un usuarioId, se agrega a la consulta
+	if usuarioId != nil {
+		sql += fmt.Sprintf(" AND u.documento = '%s'", *usuarioId)
+	}
+
+	// Agregar otros filtros dinámicos
+	for k, v := range query {
+		// Omitir agregar "sistema_informacion" porque ya está siendo usado en "s.id = ?"
+		if k == "sistema_informacion" {
+			continue
+		}
+		sql += fmt.Sprintf(" AND %s = '%s'", k, v)
+	}
+
+	// Sorting
+	if len(sortby) > 0 {
+		sql += " ORDER BY "
+		for i, s := range sortby {
+			orderby := s
+			if len(order) == 1 {
+				orderby += " " + order[0]
+			} else if len(order) > 1 {
+				orderby += " " + order[i]
+			}
+			if i < len(sortby)-1 {
+				sql += orderby + ", "
+			} else {
+				sql += orderby
+			}
+		}
+	}
+
+	// Pagination
+	sql += fmt.Sprintf(" LIMIT %d OFFSET %d", limit, offset)
+	// Execute query
+	_, err = o.Raw(sql).QueryRows(&results)
+	if err != nil {
+		return nil, err
+	}
+
+	// Convertir los resultados a []interface{}
+	for _, v := range results {
+		// Si se especificaron campos, solo seleccionamos esos campos
+		if len(fields) > 0 {
+			m := make(map[string]interface{})
+			val := reflect.ValueOf(v)
+			for _, fname := range fields {
+				m[fname] = val.FieldByName(fname).Interface()
+			}
+			ml = append(ml, m)
+		} else {
+			ml = append(ml, v)
+		}
+	}
+	return ml, nil
 }
