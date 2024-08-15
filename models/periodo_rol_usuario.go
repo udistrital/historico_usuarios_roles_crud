@@ -327,8 +327,6 @@ func GetPeriodosBySistemaId(usuarioId *string, sistemaId string, query map[strin
 	offset int64, limit int64) (ml []interface{}, err error) {
 	o := orm.NewOrm()
 	var results []PeriodoRolUsuario
-
-	// Base SQL Query con filtros por sistema de información y usuario
 	sql := `SELECT p.* FROM usuario_rol.periodo_rol_usuario p 
 		INNER JOIN usuario_rol.rol r ON p.rol_id = r.id 
 		INNER JOIN usuario_rol.sistema_informacion s ON r.sistema_informacion_id = s.id 
@@ -371,15 +369,23 @@ func GetPeriodosBySistemaId(usuarioId *string, sistemaId string, query map[strin
 
 	// Pagination
 	sql += fmt.Sprintf(" LIMIT %d OFFSET %d", limit, offset)
-	// Execute query
+
 	_, err = o.Raw(sql).QueryRows(&results)
 	if err != nil {
 		return nil, err
 	}
 
+	// Llenar las relaciones
+	for i := range results {
+		o.LoadRelated(&results[i], "UsuarioId")
+		o.LoadRelated(&results[i], "RolId")
+		if results[i].RolId != nil {
+			o.LoadRelated(results[i].RolId, "SistemaInformacionId")
+		}
+	}
+
 	// Convertir los resultados a []interface{}
 	for _, v := range results {
-		// Si se especificaron campos, solo seleccionamos esos campos
 		if len(fields) > 0 {
 			m := make(map[string]interface{})
 			val := reflect.ValueOf(v)
