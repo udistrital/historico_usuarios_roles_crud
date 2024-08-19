@@ -137,8 +137,18 @@ func (c *PeriodoRolUsuarioController) GetAll() {
 		}
 	}
 
-	//l, err := models.GetAllPeriodoRolUsuario(query, fields, sortby, order, offset, limit)
-	l, err := services.GetAllPeriodoRolUsuario(query, fields, sortby, order, offset, limit)
+	// Verificar si el query contiene sistema_informacion
+	var l interface{}
+	var err error
+	if sistemaId, ok := query["sistema_informacion"]; ok {
+		// Llamar al servicio de SistemaInformacion
+		l, err = services.PeriodosPorSistema(nil, sistemaId, query, fields, sortby, order, offset, limit)
+	} else {
+		// Llamar al servicio estándar
+		l, err = services.GetAllPeriodoRolUsuario(query, fields, sortby, order, offset, limit)
+	}
+
+	//l, err := services.GetAllPeriodoRolUsuario(query, fields, sortby, order, offset, limit)
 	if err != nil {
 		logs.Error(err)
 		c.Data["Message"] = "Error servicio GetAll: la solicitud contiene un parámetro incorrecto o no existe ningún registro."

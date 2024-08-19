@@ -1,0 +1,10 @@
+usuario_rol_crud.exe
+lastupdate.tmp
+init.sql
+routers/commentsRouter____src_github_com_udistrital_usuario_rol_crud_controllers.go
+udistrital
+usuario_rol_crud
+coverage.out
+database/migrations/20240726_152941_add_user_table.go
+database/scripts/000001_000000_create_migrations_table.sql
+database/scripts/20240716_173018_create_migrations_table.go
