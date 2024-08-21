@@ -84,7 +84,7 @@ func GetPeriodoRolUsuarioById(id int) (*PeriodoRolUsuario, error) {
 // GetAllPeriodoRolUsuario retrieves all PeriodoRolUsuario matches certain condition. Returns empty list if
 // no records exist
 func GetAllPeriodoRolUsuario(query map[string]string, fields []string, sortby []string, order []string,
-	offset int64, limit int64) (ml []interface{}, err error) {
+	offset int64, limit int64) (ml []interface{}, total int64, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(PeriodoRolUsuario)).RelatedSel()
 	// query k=v
@@ -96,6 +96,11 @@ func GetAllPeriodoRolUsuario(query map[string]string, fields []string, sortby []
 		} else {
 			qs = qs.Filter(k, v)
 		}
+	}
+	// Calcular el total de registros antes de aplicar limit y offset
+	total, err = qs.Count()
+	if err != nil {
+		return nil, 0, err
 	}
 	// order by:
 	var sortFields []string
@@ -109,7 +114,7 @@ func GetAllPeriodoRolUsuario(query map[string]string, fields []string, sortby []
 				} else if order[i] == "asc" {
 					orderby = v
 				} else {
-					return nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
+					return nil, 0, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
 				sortFields = append(sortFields, orderby)
 			}
@@ -123,16 +128,16 @@ func GetAllPeriodoRolUsuario(query map[string]string, fields []string, sortby []
 				} else if order[0] == "asc" {
 					orderby = v
 				} else {
-					return nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
+					return nil, 0, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
 				sortFields = append(sortFields, orderby)
 			}
 		} else if len(sortby) != len(order) && len(order) != 1 {
-			return nil, errors.New("Error: 'sortby', 'order' sizes mismatch or 'order' size is not 1")
+			return nil, 0, errors.New("Error: 'sortby', 'order' sizes mismatch or 'order' size is not 1")
 		}
 	} else {
 		if len(order) != 0 {
-			return nil, errors.New("Error: unused 'order' fields")
+			return nil, 0, errors.New("Error: unused 'order' fields")
 		}
 	}
 
@@ -143,7 +148,7 @@ func GetAllPeriodoRolUsuario(query map[string]string, fields []string, sortby []
 			for _, v := range l {
 				formateado, err := formatoFechas(v)
 				if err != nil {
-					return nil, err
+					return nil, 0, err
 				}
 				ml = append(ml, formateado)
 			}
@@ -152,7 +157,7 @@ func GetAllPeriodoRolUsuario(query map[string]string, fields []string, sortby []
 			for _, v := range l {
 				formateado, err := formatoFechas(v)
 				if err != nil {
-					return nil, err
+					return nil, 0, err
 				}
 				m := make(map[string]interface{})
 				val := reflect.ValueOf(formateado)
@@ -162,9 +167,9 @@ func GetAllPeriodoRolUsuario(query map[string]string, fields []string, sortby []
 				ml = append(ml, m)
 			}
 		}
-		return ml, nil
+		return ml, total, nil
 	}
-	return nil, err
+	return nil, 0, err
 }
 
 // UpdatePeriodoRolUsuario updates PeriodoRolUsuario by Id and returns error if
@@ -239,7 +244,7 @@ func formatoFechas(p PeriodoRolUsuario) (PeriodoRolUsuario, error) {
 
 // GetPeriodosByUsuarioId obtiene los periodos de un usuario dado su ID
 func GetPeriodosByUsuarioId(usuarioId int, query map[string]string, fields []string, sortby []string, order []string,
-	offset int64, limit int64) (ml []interface{}, err error) {
+	offset int64, limit int64) (ml []interface{}, total int64, err error) {
 
 	o := orm.NewOrm()
 	//var periodos []PeriodoRolUsuario
@@ -254,6 +259,11 @@ func GetPeriodosByUsuarioId(usuarioId int, query map[string]string, fields []str
 			qs = qs.Filter(k, v)
 		}
 	}
+	// Calcular el total de registros antes de aplicar limit y offset
+	total, err = qs.Count()
+	if err != nil {
+		return nil, 0, err
+	}
 	// order by:
 	var sortFields []string
 	if len(sortby) != 0 {
@@ -266,7 +276,7 @@ func GetPeriodosByUsuarioId(usuarioId int, query map[string]string, fields []str
 				} else if order[i] == "asc" {
 					orderby = v
 				} else {
-					return nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
+					return nil, 0, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
 				sortFields = append(sortFields, orderby)
 			}
@@ -280,16 +290,16 @@ func GetPeriodosByUsuarioId(usuarioId int, query map[string]string, fields []str
 				} else if order[0] == "asc" {
 					orderby = v
 				} else {
-					return nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
+					return nil, 0, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
 				sortFields = append(sortFields, orderby)
 			}
 		} else if len(sortby) != len(order) && len(order) != 1 {
-			return nil, errors.New("Error: 'sortby', 'order' sizes mismatch or 'order' size is not 1")
+			return nil, 0, errors.New("Error: 'sortby', 'order' sizes mismatch or 'order' size is not 1")
 		}
 	} else {
 		if len(order) != 0 {
-			return nil, errors.New("Error: unused 'order' fields")
+			return nil, 0, errors.New("Error: unused 'order' fields")
 		}
 	}
 
@@ -300,7 +310,7 @@ func GetPeriodosByUsuarioId(usuarioId int, query map[string]string, fields []str
 			for _, v := range l {
 				formateado, err := formatoFechas(v)
 				if err != nil {
-					return nil, err
+					return nil, 0, err
 				}
 				ml = append(ml, formateado)
 			}
@@ -309,7 +319,7 @@ func GetPeriodosByUsuarioId(usuarioId int, query map[string]string, fields []str
 			for _, v := range l {
 				formateado, err := formatoFechas(v)
 				if err != nil {
-					return nil, err
+					return nil, 0, err
 				}
 				m := make(map[string]interface{})
 				val := reflect.ValueOf(formateado)
@@ -319,12 +329,12 @@ func GetPeriodosByUsuarioId(usuarioId int, query map[string]string, fields []str
 				ml = append(ml, m)
 			}
 		}
-		return ml, nil
+		return ml, total, nil
 	}
-	return nil, err
+	return nil, 0, err
 }
 func GetPeriodosBySistemaId(usuarioId *string, sistemaId string, query map[string]string, fields []string, sortby []string, order []string,
-	offset int64, limit int64) (ml []interface{}, err error) {
+	offset int64, limit int64) (ml []interface{}, total int64, err error) {
 	o := orm.NewOrm()
 	var results []PeriodoRolUsuario
 	sql := `SELECT p.* FROM usuario_rol.periodo_rol_usuario p 
@@ -349,6 +359,12 @@ func GetPeriodosBySistemaId(usuarioId *string, sistemaId string, query map[strin
 		sql += fmt.Sprintf(" AND %s = '%s'", k, v)
 	}
 
+	// Consulta para contar el total de registros
+	totalSQL := `SELECT COUNT(*) FROM (` + sql + `) AS total_count`
+	err = o.Raw(totalSQL).QueryRow(&total)
+	if err != nil {
+		return nil, 0, err
+	}
 	// Sorting
 	if len(sortby) > 0 {
 		sql += " ORDER BY "
@@ -372,7 +388,7 @@ func GetPeriodosBySistemaId(usuarioId *string, sistemaId string, query map[strin
 
 	_, err = o.Raw(sql).QueryRows(&results)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 
 	// Llenar las relaciones
@@ -397,5 +413,5 @@ func GetPeriodosBySistemaId(usuarioId *string, sistemaId string, query map[strin
 			ml = append(ml, v)
 		}
 	}
-	return ml, nil
+	return ml, total, nil
 }

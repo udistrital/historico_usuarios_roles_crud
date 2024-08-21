@@ -40,10 +40,10 @@ func DeleteUsuario(id int) (err error) {
 	return models.DeleteUsuario(id)
 }
 func GetPeriodosPorDocumento(documento string, query map[string]string, fields []string, sortby []string, order []string,
-	offset int64, limit int64) (ml []interface{}, err error) {
+	offset int64, limit int64) (ml []interface{}, total int64, err error) {
 	usuario, err := models.GetUsuarioByDocumento(documento)
 	if err != nil {
-		return nil, errors.New("el documento no existe")
+		return nil, 0, errors.New("el documento no existe")
 	}
 	return models.GetPeriodosByUsuarioId(usuario.Id, query, fields, sortby, order, offset, limit)
 }

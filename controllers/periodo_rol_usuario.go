@@ -140,12 +140,13 @@ func (c *PeriodoRolUsuarioController) GetAll() {
 	// Verificar si el query contiene sistema_informacion
 	var l interface{}
 	var err error
+	var count int64
 	if sistemaId, ok := query["sistema_informacion"]; ok {
 		// Llamar al servicio de SistemaInformacion
-		l, err = services.PeriodosPorSistema(nil, sistemaId, query, fields, sortby, order, offset, limit)
+		l, count, err = services.PeriodosPorSistema(nil, sistemaId, query, fields, sortby, order, offset, limit)
 	} else {
 		// Llamar al servicio estándar
-		l, err = services.GetAllPeriodoRolUsuario(query, fields, sortby, order, offset, limit)
+		l, count, err = services.GetAllPeriodoRolUsuario(query, fields, sortby, order, offset, limit)
 	}
 
 	//l, err := services.GetAllPeriodoRolUsuario(query, fields, sortby, order, offset, limit)
@@ -154,7 +155,7 @@ func (c *PeriodoRolUsuarioController) GetAll() {
 		c.Data["Message"] = "Error servicio GetAll: la solicitud contiene un parámetro incorrecto o no existe ningún registro."
 		c.Abort("404")
 	} else {
-		c.Data["json"] = map[string]interface{}{"Success": true, "Status": 200, "Message": "Petición exitosa", "Data": l}
+		c.Data["json"] = map[string]interface{}{"count": count, "Success": true, "Status": 200, "Message": "Petición exitosa", "Data": l}
 	}
 	c.ServeJSON()
 }
