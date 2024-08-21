@@ -155,7 +155,7 @@ func (c *PeriodoRolUsuarioController) GetAll() {
 		c.Data["Message"] = "Error servicio GetAll: la solicitud contiene un parámetro incorrecto o no existe ningún registro."
 		c.Abort("404")
 	} else {
-		c.Data["json"] = map[string]interface{}{"count": count, "Success": true, "Status": 200, "Message": "Petición exitosa", "Data": l}
+		c.Data["json"] = map[string]interface{}{"Metadata": map[string]interface{}{"Count": count}, "Success": true, "Status": 200, "Message": "Petición exitosa", "Data": l}
 	}
 	c.ServeJSON()
 }

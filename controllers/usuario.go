@@ -152,7 +152,7 @@ func (c *UsuarioController) GetPeriodosByDocumento() {
 		c.Data["Message"] = "Error en la consulta de los periodos."
 		c.Abort("404")
 	} else {
-		c.Data["json"] = map[string]interface{}{"Count": count, "Success": true, "Status": 200, "Message": "Petición exitosa", "Data": result}
+		c.Data["json"] = map[string]interface{}{"Metadata": map[string]interface{}{"Count": count}, "Success": true, "Status": 200, "Message": "Petición exitosa", "Data": result}
 	}
 	c.ServeJSON()
 }
