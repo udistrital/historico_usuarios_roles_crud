@@ -259,7 +259,7 @@ func GetPeriodosByUsuarioId(usuarioId int, query map[string]string, fields []str
 			qs = qs.Filter(k, v)
 		}
 	}
-	// Calcular el total de registros antes de aplicar limit y offset
+	// Calcular el total de registros
 	total, err = qs.Count()
 	if err != nil {
 		return nil, 0, err
@@ -337,17 +337,21 @@ func GetPeriodosBySistemaId(usuarioId *string, sistemaId string, query map[strin
 	offset int64, limit int64) (ml []interface{}, total int64, err error) {
 	o := orm.NewOrm()
 	var results []PeriodoRolUsuario
+	var params []interface{}
+
 	sql := `SELECT p.* FROM usuario_rol.periodo_rol_usuario p 
 		INNER JOIN usuario_rol.rol r ON p.rol_id = r.id 
 		INNER JOIN usuario_rol.sistema_informacion s ON r.sistema_informacion_id = s.id 
 		INNER JOIN usuario_rol.usuario u ON p.usuario_id = u.id
 		WHERE `
 
-	sql += fmt.Sprintf("s.id = '%s'", sistemaId)
+	sql += "s.id = ?"
+	params = append(params, sistemaId)
 
 	// Si se pasa un usuarioId, se agrega a la consulta
 	if usuarioId != nil {
-		sql += fmt.Sprintf(" AND u.documento = '%s'", *usuarioId)
+		sql += " AND u.documento = ?"
+		params = append(params, *usuarioId)
 	}
 
 	// Agregar otros filtros dinámicos
@@ -356,15 +360,18 @@ func GetPeriodosBySistemaId(usuarioId *string, sistemaId string, query map[strin
 		if k == "sistema_informacion" {
 			continue
 		}
-		sql += fmt.Sprintf(" AND %s = '%s'", k, v)
+		sql += fmt.Sprintf(" AND %s = ?", k)
+		params = append(params, v)
 	}
 
 	// Consulta para contar el total de registros
 	totalSQL := `SELECT COUNT(*) FROM (` + sql + `) AS total_count`
-	err = o.Raw(totalSQL).QueryRow(&total)
+	err = o.Raw(totalSQL, params...).QueryRow(&total)
 	if err != nil {
 		return nil, 0, err
 	}
+	fmt.Println("SQL Query:", sql)
+	fmt.Println("Params:", params)
 	// Sorting
 	if len(sortby) > 0 {
 		sql += " ORDER BY "
@@ -384,9 +391,9 @@ func GetPeriodosBySistemaId(usuarioId *string, sistemaId string, query map[strin
 	}
 
 	// Pagination
-	sql += fmt.Sprintf(" LIMIT %d OFFSET %d", limit, offset)
-
-	_, err = o.Raw(sql).QueryRows(&results)
+	sql += " LIMIT ? OFFSET ?"
+	params = append(params, limit, offset)
+	_, err = o.Raw(sql, params...).QueryRows(&results)
 	if err != nil {
 		return nil, 0, err
 	}
