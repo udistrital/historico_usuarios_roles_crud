@@ -38,7 +38,7 @@ func GetPeriodoRolUsuarioById(id int) (v *models.PeriodoRolUsuario, err error) {
 	return models.GetPeriodoRolUsuarioById(id)
 }
 func GetAllPeriodoRolUsuario(query map[string]string, fields []string, sortby []string, order []string,
-	offset int64, limit int64) (ml []interface{}, err error) {
+	offset int64, limit int64) (ml []interface{}, total int64, err error) {
 	return models.GetAllPeriodoRolUsuario(query, fields, sortby, order, offset, limit)
 }
 func UpdatePeriodoRolUsuarioById(v *models.PeriodoRolUsuario) (err error) {
@@ -100,6 +100,6 @@ func ValidarPeriodoFechas(inicio string, fin *string) error {
 	return nil
 }
 func PeriodosPorSistema(usuarioId *string, sistemaId string, query map[string]string, fields []string, sortby []string, order []string,
-	offset int64, limit int64) (ml []interface{}, err error) {
+	offset int64, limit int64) (ml []interface{}, total int64, err error) {
 	return models.GetPeriodosBySistemaId(usuarioId, sistemaId, query, fields, sortby, order, offset, limit)
 }

@@ -138,13 +138,13 @@ func (c *UsuarioController) GetPeriodosByDocumento() {
 	}
 	var result interface{}
 	var err error
-
+	var count int64
 	if sistemaId, ok := query["sistema_informacion"]; ok {
 		// Llamar al servicio de SistemaInformacion
-		result, err = services.PeriodosPorSistema(&documento, sistemaId, query, fields, sortby, order, offset, limit)
+		result, count, err = services.PeriodosPorSistema(&documento, sistemaId, query, fields, sortby, order, offset, limit)
 	} else {
 		// Llamar al servicio estándar
-		result, err = services.GetPeriodosPorDocumento(documento, query, fields, sortby, order, offset, limit)
+		result, count, err = services.GetPeriodosPorDocumento(documento, query, fields, sortby, order, offset, limit)
 	}
 	//periodosUsuario, err := services.GetPeriodosPorDocumento(documento, query, fields, sortby, order, offset, limit)
 	if err != nil {
@@ -152,7 +152,7 @@ func (c *UsuarioController) GetPeriodosByDocumento() {
 		c.Data["Message"] = "Error en la consulta de los periodos."
 		c.Abort("404")
 	} else {
-		c.Data["json"] = map[string]interface{}{"Success": true, "Status": 200, "Message": "Petición exitosa", "Data": result}
+		c.Data["json"] = map[string]interface{}{"Metadata": map[string]interface{}{"Count": count}, "Success": true, "Status": 200, "Message": "Petición exitosa", "Data": result}
 	}
 	c.ServeJSON()
 }
