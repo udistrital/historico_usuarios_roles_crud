@@ -1,10 +1,6 @@
 package main
 
 import (
-	"fmt"
-	"os"
-	"strings"
-
 	"github.com/astaxie/beego/migration"
 )
 
@@ -24,7 +20,8 @@ func init() {
 // Run the migrations
 func (m *CreacionTablas_20240626_001109) Up() {
 	// use m.SQL("CREATE TABLE ...") to make schema update
-	file, err := os.ReadFile("../scripts/20240626_001109_creacion_tablas.up.sql")
+	//se remueve ya que las migraciones se haran de manera manual y asi evitar conflictos
+	/*file, err := os.ReadFile("../scripts/20240626_001109_creacion_tablas.up.sql")
 
 	if err != nil {
 		// handle error
@@ -37,14 +34,16 @@ func (m *CreacionTablas_20240626_001109) Up() {
 		fmt.Println(request)
 		m.SQL(request)
 		// do whatever you need with result and error
-	}
+	}*/
 
 }
 
 // Reverse the migrations
 func (m *CreacionTablas_20240626_001109) Down() {
 	// use m.SQL("DROP TABLE ...") to reverse schema update
-	file, err := os.ReadFile("../scripts/20240626_001109_creacion_tablas.down.sql")
+	//se remueve ya que las migraciones se haran de manera manual y asi evitar conflictos
+
+	/*file, err := os.ReadFile("../scripts/20240626_001109_creacion_tablas.down.sql")
 
 	if err != nil {
 		// handle error
@@ -57,5 +56,5 @@ func (m *CreacionTablas_20240626_001109) Down() {
 		fmt.Println(request)
 		m.SQL(request)
 		// do whatever you need with result and error
-	}
+	}*/
 }

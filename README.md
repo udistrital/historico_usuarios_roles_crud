@@ -11,12 +11,12 @@ El APIes un apoyo para el servicio de WSO2 gestiona los diferentes usuarios y su
 
 ### Variables de Entorno
 
-usuario_rol_v1_PGuser=[usuario con acceso a la base de datos]
-usuario_rol_v1_PGpass=[password del usuario]
-usuario_rol_v1_PGhost=[Puerto de conexión con la base de datos]
-usuario_rol_v1_PGport=[puerto de ejecucion]
-usuario_rol_v1_PGdb=[nombre de la base de datos]
-usuario_rol_v1_PGschema=[esquema donde se ubican las tablas]
+USUARIO_ROL_PGuser=[usuario con acceso a la base de datos]
+USUARIO_ROL_PGpass=[password del usuario]
+USUARIO_ROL_PGhost=[Puerto de conexión con la base de datos]
+USUARIO_ROL_PGport=[puerto de ejecucion]
+USUARIO_ROL_PGdb=[nombre de la base de datos]
+USUARIO_ROL_PGschema=[esquema donde se ubican las tablas]
 
 ### Ejecución del Proyecto
 ```shel
@@ -43,7 +43,7 @@ bee run -downdoc=true -gendoc=true
 
 ## Modelo de Datos
 
-[Modelo de Datos API CRUD historico_usuarios_roles_crud](https://udistritaleduco-my.sharepoint.com/:i:/g/personal/computo_udistrital_edu_co/EfGWa3eCgpBJjtXQq_loOVABsxv2QyChSfwFNZj6xcZZdw?e=SUzwTJ)
+[Modelo de Datos API CRUD historico_usuarios_roles_crud](./docs/usuarios%20y%20roles%20V5.png)
 
 
 ## Licencia

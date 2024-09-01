@@ -3,9 +3,7 @@
 DROP SCHEMA IF EXISTS "usuario_rol_db" ;
 
 CREATE SCHEMA IF NOT EXISTS "usuario_rol_db"
-   -- AUTHORIZATION postgres;
-	
-	
+  	
 	CREATE TABLE IF NOT EXISTS usuario_rol.usuario(
 		id serial NOT NULL,
 		activo boolean NOT NULL,
