@@ -161,7 +161,7 @@ func (c *RolController) Put() {
 	id, _ := strconv.Atoi(idStr)
 	v := models.Rol{Id: id}
 	if err := json.Unmarshal(c.Ctx.Input.RequestBody, &v); err == nil {
-		if err := models.UpdateRolById(&v); err == nil {
+		if err := services.UpdateRolById(&v); err == nil {
 			c.Data["json"] = map[string]interface{}{"Success": true, "Status": 200, "Message": "Modificacion exitosa", "Data": v}
 		} else {
 			logs.Error(err)
