@@ -43,7 +43,7 @@ bee run -downdoc=true -gendoc=true
 
 ## Modelo de Datos
 
-[Modelo de Datos API CRUD historico_usuarios_roles_crud](./docs/usuarios%20y%20roles%20V5.png)
+[Modelo de Datos API CRUD historico_usuarios_roles_crud](./docs/usuarios%20y%20roles%20V6.drawio.png)
 
 
 ## Licencia

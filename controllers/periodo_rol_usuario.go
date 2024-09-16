@@ -149,7 +149,6 @@ func (c *PeriodoRolUsuarioController) GetAll() {
 		l, count, err = services.GetAllPeriodoRolUsuario(query, fields, sortby, order, offset, limit)
 	}
 
-	//l, err := services.GetAllPeriodoRolUsuario(query, fields, sortby, order, offset, limit)
 	if err != nil {
 		logs.Error(err)
 		c.Data["Message"] = "Error servicio GetAll: la solicitud contiene un parámetro incorrecto o no existe ningún registro."

@@ -11,12 +11,12 @@ import (
 )
 
 type Rol struct {
-	Id                   int                 `orm:"column(id);pk;auto"`
-	Activo               bool                `orm:"column(activo)"`
-	FechaCreacion        string              `orm:"column(fecha_creacion);type(timestamp without time zone)"`
-	FechaModificacion    string              `orm:"column(fecha_modificacion);type(timestamp without time zone)"`
-	Nombre               string              `orm:"column(nombre)"`
-	SistemaInformacionId *SistemaInformacion `orm:"column(sistema_informacion_id);rel(fk)"`
+	Id                   int    `orm:"column(id);pk;auto"`
+	Activo               bool   `orm:"column(activo)"`
+	FechaCreacion        string `orm:"column(fecha_creacion);type(timestamp without time zone)"`
+	FechaModificacion    string `orm:"column(fecha_modificacion);type(timestamp without time zone)"`
+	Nombre               string `orm:"column(nombre)"`
+	SistemaInformacionId *int   `orm:"column(sistema_informacion_id)"`
 }
 
 func (t *Rol) TableName() string {

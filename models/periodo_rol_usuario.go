@@ -65,13 +65,6 @@ func GetPeriodoRolUsuarioById(id int) (*PeriodoRolUsuario, error) {
 		}
 	}
 
-	// cargar el SistemaInformacion relacionado con Rol
-	if v.RolId != nil && v.RolId.SistemaInformacionId != nil {
-		if err := o.Read(v.RolId.SistemaInformacionId); err != nil {
-			return nil, err
-		}
-	}
-
 	// Formatear fechas
 	formateado, err := formatoFechas(*v)
 	if err != nil {
@@ -339,13 +332,13 @@ func GetPeriodosBySistemaId(usuarioId *string, sistemaId string, query map[strin
 	var results []PeriodoRolUsuario
 	var params []interface{}
 
-	sql := `SELECT p.* FROM usuario_rol.periodo_rol_usuario p 
-		INNER JOIN usuario_rol.rol r ON p.rol_id = r.id 
-		INNER JOIN usuario_rol.sistema_informacion s ON r.sistema_informacion_id = s.id 
-		INNER JOIN usuario_rol.usuario u ON p.usuario_id = u.id
+	sql := `SELECT p.* 
+		FROM usuario_rol_db.periodo_rol_usuario p
+		INNER JOIN usuario_rol_db.rol r ON p.rol_id = r.id
+		INNER JOIN usuario_rol_db.usuario u ON p.usuario_id = u.id
 		WHERE `
 
-	sql += "s.id = ?"
+	sql += "r.sistema_informacion_id = ?"
 	params = append(params, sistemaId)
 
 	// Si se pasa un usuarioId, se agrega a la consulta
@@ -370,8 +363,8 @@ func GetPeriodosBySistemaId(usuarioId *string, sistemaId string, query map[strin
 	if err != nil {
 		return nil, 0, err
 	}
-	fmt.Println("SQL Query:", sql)
-	fmt.Println("Params:", params)
+	//fmt.Println("SQL Query:", sql)
+	//fmt.Println("Params:", params)
 	// Sorting
 	if len(sortby) > 0 {
 		sql += " ORDER BY "
@@ -402,9 +395,9 @@ func GetPeriodosBySistemaId(usuarioId *string, sistemaId string, query map[strin
 	for i := range results {
 		o.LoadRelated(&results[i], "UsuarioId")
 		o.LoadRelated(&results[i], "RolId")
-		if results[i].RolId != nil {
+		/*if results[i].RolId != nil {
 			o.LoadRelated(results[i].RolId, "SistemaInformacionId")
-		}
+		}*/
 	}
 
 	// Convertir los resultados a []interface{}

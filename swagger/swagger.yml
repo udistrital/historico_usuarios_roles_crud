@@ -239,120 +239,6 @@ paths:
           description: '{string} delete success!'
         "403":
           description: id is empty
-  /sistemas-informacion/:
-    get:
-      tags:
-      - sistemas-informacion
-      description: get SistemaInformacion
-      operationId: SistemaInformacionController.Get All
-      parameters:
-      - in: query
-        name: query
-        description: Filter. e.g. col1:v1,col2:v2 ...
-        type: string
-      - in: query
-        name: fields
-        description: Fields returned. e.g. col1,col2 ...
-        type: string
-      - in: query
-        name: sortby
-        description: Sorted-by fields. e.g. col1,col2 ...
-        type: string
-      - in: query
-        name: order
-        description: Order corresponding to each sortby field, if single value, apply to all sortby fields. e.g. desc,asc ...
-        type: string
-      - in: query
-        name: limit
-        description: Limit the size of result set. Must be an integer
-        type: string
-      - in: query
-        name: offset
-        description: Start position of result set. Must be an integer
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/models.SistemaInformacion'
-        "403":
-          description: ""
-    post:
-      tags:
-      - sistemas-informacion
-      description: create SistemaInformacion
-      operationId: SistemaInformacionController.Post
-      parameters:
-      - in: body
-        name: body
-        description: body for SistemaInformacion content
-        required: true
-        schema:
-          $ref: '#/definitions/models.SistemaInformacion'
-      responses:
-        "201":
-          description: '{int} models.SistemaInformacion'
-        "403":
-          description: body is empty
-  /sistemas-informacion/{id}:
-    get:
-      tags:
-      - sistemas-informacion
-      description: get SistemaInformacion by id
-      operationId: SistemaInformacionController.Get One
-      parameters:
-      - in: path
-        name: id
-        description: The key for staticblock
-        required: true
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/models.SistemaInformacion'
-        "403":
-          description: :id is empty
-    put:
-      tags:
-      - sistemas-informacion
-      description: update the SistemaInformacion
-      operationId: SistemaInformacionController.Put
-      parameters:
-      - in: path
-        name: id
-        description: The id you want to update
-        required: true
-        type: string
-      - in: body
-        name: body
-        description: body for SistemaInformacion content
-        required: true
-        schema:
-          $ref: '#/definitions/models.SistemaInformacion'
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/models.SistemaInformacion'
-        "403":
-          description: :id is not int
-    delete:
-      tags:
-      - sistemas-informacion
-      description: delete the SistemaInformacion
-      operationId: SistemaInformacionController.Delete
-      parameters:
-      - in: path
-        name: id
-        description: The id you want to delete
-        required: true
-        type: string
-      responses:
-        "200":
-          description: '{string} delete success!'
-        "403":
-          description: id is empty
   /usuarios/:
     get:
       tags:
@@ -550,24 +436,8 @@ definitions:
       Nombre:
         type: string
       SistemaInformacionId:
-        $ref: '#/definitions/models.SistemaInformacion'
-  models.SistemaInformacion:
-    title: SistemaInformacion
-    type: object
-    properties:
-      Activo:
-        type: boolean
-      Descripcion:
-        type: string
-      FechaCreacion:
-        type: string
-      FechaModificacion:
-        type: string
-      Id:
         type: integer
         format: int64
-      Nombre:
-        type: string
   models.Usuario:
     title: Usuario
     type: object
@@ -584,9 +454,6 @@ definitions:
         type: integer
         format: int64
 tags:
-- name: sistemas-informacion
-  description: |
-    SistemaInformacionController operations for SistemaInformacion
 - name: roles
   description: |
     RolController operations for Rol
