@@ -1,5 +1,6 @@
-# historico_usuarios_roles
-El APIes un apoyo para el servicio de WSO2 gestiona los diferentes usuarios y sus respectivos roles en cada sistema de informacion 
+# Usuario Rol
+El API permite gestionar el histórico de roles de un usuario almacenando el periodo, rol y el id del usuario por sistema de información.
+Puede ser usado como apoyo para el servicio de WSO2 garantizando el almacenamiento de los cambios en roles efectuados.
 
 ## Especificaciones Técnicas
 

@@ -1,12 +1,10 @@
-usuario_rol_crud.exe
-historico_usuarios_roles_crud.exe
 lastupdate.tmp
 init.sql
 routers/commentsRouter____src_github_com_udistrital_usuario_rol_crud_controllers.go
 udistrital
-usuario_rol_crud
 coverage.out
 
+# Swagger
 swagger.zip
 swagger/favicon-16x16.png
 swagger/favicon-32x32.png
@@ -20,3 +18,10 @@ swagger/swagger-ui.css
 swagger/swagger-ui.css.map
 swagger/swagger-ui.js
 swagger/swagger-ui.js.map
+
+# IDE
+.idea
+
+# Executables
+usuario_rol_crud*
+historico_usuarios_roles_crud*
