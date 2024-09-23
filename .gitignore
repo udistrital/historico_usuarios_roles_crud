@@ -4,6 +4,7 @@ routers/commentsRouter____src_github_com_udistrital_usuario_rol_crud_controllers
 udistrital
 coverage.out
 
+
 # Swagger
 swagger.zip
 swagger/favicon-16x16.png
@@ -25,3 +26,6 @@ swagger/swagger-ui.js.map
 # Executables
 usuario_rol_crud*
 historico_usuarios_roles_crud*
+
+go.mod
+go.sum
