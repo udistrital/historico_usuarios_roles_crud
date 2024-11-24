@@ -95,7 +95,7 @@ func (c *PeriodoRolUsuarioController) GetOne() {
 // @router / [get]
 func (c *PeriodoRolUsuarioController) GetAll() {
 	defer helpers.ErrorController(c.Controller, "PeriodoRolUsuarioController")
-
+	logs.Info("RAMA1")
 	var fields []string
 	var sortby []string
 	var order []string
@@ -126,19 +126,27 @@ func (c *PeriodoRolUsuarioController) GetAll() {
 	// query: k:v,k:v
 	if v := c.GetString("query"); v != "" {
 		for _, cond := range strings.Split(v, ",") {
-			kv := strings.SplitN(cond, ":", 2)
-			if len(kv) != 2 {
+			// Asegúrate de que no se rompan los valores múltiples como "RolId.id:5,2"
+			if strings.Contains(cond, ":") {
+				kv := strings.SplitN(cond, ":", 2)
+				if len(kv) != 2 {
+					c.Data["json"] = errors.New("Error: invalid query key/value pair")
+					c.ServeJSON()
+					return
+				}
+				k, v := kv[0], kv[1]
+
+				// Si el valor tiene comas, lo manejamos como una lista para el filtro "in"
+				if strings.Contains(v, ",") {
+					query[k] = v // Mantenemos los valores múltiples separados por comas
+				} else {
+					query[k] = v
+				}
+			} else {
+				// Si el condicional no contiene ":", es un error en el formato del query
 				c.Data["json"] = errors.New("Error: invalid query key/value pair")
 				c.ServeJSON()
 				return
-			}
-			k, v := kv[0], kv[1]
-
-			// Si el valor contiene comas, trata de hacer un filtro "in" para múltiples valores
-			if strings.Contains(v, ",") {
-				query[k] = v // Mantén el valor tal cual para que luego puedas manejarlo en el servicio
-			} else {
-				query[k] = v
 			}
 		}
 	}

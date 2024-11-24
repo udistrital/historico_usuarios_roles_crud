@@ -88,9 +88,8 @@ func GetAllPeriodoRolUsuario(query map[string]string, fields []string, sortby []
 		if strings.Contains(k, "isnull") {
 			qs = qs.Filter(k, (v == "true" || v == "1"))
 		} else {
-			// Si el valor contiene comas, lo tratamos como un filtro "in"
+			// Si el valor contiene comas, se maneja como un filtro "in"
 			if strings.Contains(v, ",") {
-				// Filtrar por múltiples valores
 				qs = qs.Filter(k+"__in", strings.Split(v, ","))
 			} else {
 				qs = qs.Filter(k, v)
