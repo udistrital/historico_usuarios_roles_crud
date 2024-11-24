@@ -133,7 +133,13 @@ func (c *PeriodoRolUsuarioController) GetAll() {
 				return
 			}
 			k, v := kv[0], kv[1]
-			query[k] = v
+
+			// Si el valor contiene comas, trata de hacer un filtro "in" para múltiples valores
+			if strings.Contains(v, ",") {
+				query[k] = v // Mantén el valor tal cual para que luego puedas manejarlo en el servicio
+			} else {
+				query[k] = v
+			}
 		}
 	}
 
