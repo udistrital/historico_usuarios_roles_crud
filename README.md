@@ -40,16 +40,16 @@ bee run -downdoc=true -gendoc=true
 
 | Develop | Relese 0.0.1 | Master |
 | -- | -- | -- |
-| [![Build Status](https://hubci.portaloas.udistrital.edu.co/api/badges/udistrital/historico_usuarios_roles_crud/status.svg?ref=refs/heads/develop)](https://hubci.portaloas.udistrital.edu.co/udistrital/historico_usuarios_roles_crud/) | [![Build Status](https://hubci.portaloas.udistrital.edu.co/api/badges/udistrital/historico_usuarios_roles_crud/status.svg?ref=refs/heads/release/0.0.1)](https://hubci.portaloas.udistrital.edu.co/udistrital/historico_usuarios_roles_crud/) | [![Build Status](https://hubci.portaloas.udistrital.edu.co/api/badges/udistrital/historico_usuarios_roles_crud/status.svg)](https://hubci.portaloas.udistrital.edu.co/udistrital/historico_usuarios_roles_crud/) |
+| [![Build Status](https://hubci.portaloas.udistrital.edu.co/api/badges/udistrital/usuario_rol_crud/status.svg?ref=refs/heads/develop)](https://hubci.portaloas.udistrital.edu.co/udistrital/usuario_rol_crud/) | [![Build Status](https://hubci.portaloas.udistrital.edu.co/api/badges/udistrital/usuario_rol_crud/status.svg?ref=refs/heads/release/0.0.1)](https://hubci.portaloas.udistrital.edu.co/udistrital/usuario_rol_crud/) | [![Build Status](https://hubci.portaloas.udistrital.edu.co/api/badges/udistrital/usuario_rol_crud/status.svg)](https://hubci.portaloas.udistrital.edu.co/udistrital/usuario_rol_crud/) |
 
 ## Modelo de Datos
 
-[Modelo de Datos API CRUD historico_usuarios_roles_crud](./docs/usuarios%20y%20roles%20V6.drawio.png)
+[Modelo de Datos API CRUD usuario_rol_crud](./docs/usuarios%20y%20roles%20V6.drawio.png)
 
 
 ## Licencia
 
-This file is part of historico_usuarios_roles_crud.
+This file is part of usuario_rol_crud.
 
 usuario_rol_crud is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
