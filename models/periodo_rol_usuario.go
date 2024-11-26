@@ -82,10 +82,12 @@ func GetAllPeriodoRolUsuario(query map[string]string, fields []string, sortby []
 	qs := o.QueryTable(new(PeriodoRolUsuario)).RelatedSel()
 	// query k=v
 	for k, v := range query {
-		// rewrite dot-notation to Object__Attribute
 		k = strings.Replace(k, ".", "__", -1)
 		if strings.Contains(k, "isnull") {
 			qs = qs.Filter(k, (v == "true" || v == "1"))
+		} else if strings.Contains(k, "__in") {
+			ids := strings.Split(v, ",")
+			qs = qs.Filter(k, ids)
 		} else {
 			qs = qs.Filter(k, v)
 		}
