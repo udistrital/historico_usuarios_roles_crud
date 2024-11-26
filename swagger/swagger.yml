@@ -42,6 +42,10 @@ paths:
         name: offset
         description: Start position of result set. Must be an integer
         type: string
+      - in: query
+        name: RolId
+        description: Filter by RolId. e.g. 5,2,3
+        type: string
       responses:
         "200":
           description: ""
