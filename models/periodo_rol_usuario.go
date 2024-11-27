@@ -208,7 +208,7 @@ func ValidarAsignarPerido(idUsuario int, idRol int) error {
 	var periodos []PeriodoRolUsuario
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(PeriodoRolUsuario))
-	num, err := qs.Filter("activo", true).Filter("usuario_id", idUsuario).Filter("rol_id", idRol).All(&periodos)
+	num, err := qs.Filter("activo", true).Filter("usuario_id", idUsuario).Filter("rol_id", idRol).Filter("Finalizado", false).All(&periodos)
 	if err == nil && num > 0 {
 		logs.Info(num)
 		return errors.New("el usuario ya tiene registrado el rol activo")
