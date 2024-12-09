@@ -686,6 +686,9 @@
                 "Id": {
                     "type": "integer",
                     "format": "int64"
+                },
+                "NombreWso2": {
+                    "type": "string"
                 }
             }
         }

@@ -457,6 +457,8 @@ definitions:
       Id:
         type: integer
         format: int64
+      NombreWso2:
+        type: string
 tags:
 - name: roles
   description: |
