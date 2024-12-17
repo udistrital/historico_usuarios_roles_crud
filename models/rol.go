@@ -17,6 +17,7 @@ type Rol struct {
 	FechaModificacion    string `orm:"column(fecha_modificacion);type(timestamp without time zone)"`
 	Nombre               string `orm:"column(nombre)"`
 	SistemaInformacionId *int   `orm:"column(sistema_informacion_id)"`
+	NombreWso2           string `orm:"column(nombre_wso2)"`
 }
 
 func (t *Rol) TableName() string {

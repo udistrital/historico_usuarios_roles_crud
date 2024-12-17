@@ -661,6 +661,9 @@
                 "Nombre": {
                     "type": "string"
                 },
+                "NombreWso2": {
+                    "type": "string"
+                },
                 "SistemaInformacionId": {
                     "type": "integer",
                     "format": "int64"
@@ -686,9 +689,6 @@
                 "Id": {
                     "type": "integer",
                     "format": "int64"
-                },
-                "NombreWso2": {
-                    "type": "string"
                 }
             }
         }

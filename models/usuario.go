@@ -17,7 +17,6 @@ type Usuario struct {
 	FechaCreacion     string `orm:"column(fecha_creacion);type(timestamp without time zone)"`
 	FechaModificacion string `orm:"column(fecha_modificacion);type(timestamp without time zone)"`
 	Documento         string `orm:"column(documento);null"`
-	NombreWso2        string `orm:"column(nombre_wso2)"`
 }
 
 func (t *Usuario) TableName() string {
