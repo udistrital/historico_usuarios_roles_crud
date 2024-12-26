@@ -439,6 +439,8 @@ definitions:
         format: int64
       Nombre:
         type: string
+      NombreWso2:
+        type: string
       SistemaInformacionId:
         type: integer
         format: int64
