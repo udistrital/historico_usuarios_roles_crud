@@ -12,12 +12,14 @@ Puede ser usado como apoyo para el servicio de WSO2 garantizando el almacenamien
 
 ### Variables de Entorno
 
+```bash
 USUARIO_ROL_PGuser=[usuario con acceso a la base de datos]
 USUARIO_ROL_PGpass=[password del usuario]
 USUARIO_ROL_PGhost=[Puerto de conexión con la base de datos]
 USUARIO_ROL_PGport=[puerto de ejecucion]
 USUARIO_ROL_PGdb=[nombre de la base de datos]
 USUARIO_ROL_PGschema=[esquema donde se ubican las tablas]
+```
 
 ### Ejecución del Proyecto
 ```shel
